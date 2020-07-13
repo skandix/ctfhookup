@@ -12,8 +12,6 @@ class ctfhookup:
 		self.rss_url = "https://ctftime.org/event/list/upcoming/rss/"
 		self.webhook_url = webhook_url
 		self.rss = feedparser.parse(self.rss_url)['entries']
-		self.avaliable_formats = ['Attack-Defense','Jeopardy', 'mixed']
-		self.avaliable_restrictions = ['Open', 'Prequalified', 'Academic']
 		self.events = {}
 
 	def __str__(self):
@@ -46,25 +44,30 @@ class ctfhookup:
 		self.get_rss_entries()
 		c = Calendar()
 		for _id, data in (self._load_json().items()):
+			print (data['duration'])
+			"""
 			e = Event()
 			e.name = data['title']
 			e.begin = data['start_date']
 			e.duration = data['duration']
-			e.description = f"CTF Organized "
+
+			e.description = f"CTF {data['name']} Organized by {data['organizer_name']} \n{data['organizer_url']}\nFormat: {data['format']}\nPoint Weigth: {data['weight']}\nRestrictions: {data['restricts']}\n"
 			c.events.add(e)
 			print(c)
 
 			with open('./ical/ctftime_upcomming.ics', 'w') as f:
 				f.writelines(c)
+			"""
 
 	def _diff_time(self, end_time:str, start_time:str):
 		diff  = str(arrow.get(end_time) - arrow.get(start_time))
-		if "days" in diff:
-			return (f"{(int(diff.split('days')[0])*24)}")
-		elif "day" in diff:
-			return (f"24")
-		else:
-			return (diff.split(':')[0])
+		return diff
+		#"if "days" in diff:
+		#	return (f"{(int(diff.split('days')[0])*24)}")
+		#elif "day" in diff:
+		#	return (f"24")
+		#else:
+		#	return (diff.split(':')[0])
 
 	def _convert_to_readable(self, timebomb:str, timezone:str='Europe/Oslo') -> str:
 		"""
@@ -106,7 +109,7 @@ class ctfhookup:
 			event_onsite = bool(ctf['onsite'])
 			event_start_date = self._convert_to_readable(ctf['start_date'])
 			event_finish_date = self._convert_to_readable(ctf['finish_date'])
-			event_duration = int(self._diff_time(event_finish_date, event_start_date))
+			event_duration = self._diff_time(event_finish_date, event_start_date)
 			event_organizer_url = (ctf['href'])
 			event_organizer_name = (ctf['organizers'].split('"')[5])
 			event_can_haz_vote = bool(ctf['public_votable'])

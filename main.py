@@ -2,4 +2,4 @@
 from ctfhookup import ctfhookup
 
 if __name__ == '__main__':
-	(ctfhookup("").generate_calendar())
+	print (ctfhookup("").generate_calendar())
