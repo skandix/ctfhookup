@@ -3,12 +3,12 @@ import codecs
 import json
 
 class ctfhookup:
-	def __init__(self):
+	def __init__(self, webhook_url):
 		self.rss_url = "https://ctftime.org/event/list/upcoming/rss/"
+		self.webhook_url = webhook_url
 		self.rss = feedparser.parse(self.rss_url)['entries']
 		self.avaliable_formats = ['Attack-Defense', 'Jeopardy', 'mixed']
 		self.avaliable_restrictions = ['Open', 'Prequalified', 'Academic']
-		self.past_events = []
 		self.events = {}
 
 	def __str__(self):
@@ -21,25 +21,43 @@ class ctfhookup:
 		"""  """
 		pass
 
+	def push_upcomming(self):
+		print ("Pushing new kkool event")
+		(self._webhook())
+
 	def _webhook(self):
 		""" check if webhook is discord or slack """
-		pass
+		if "discord" in self.webhook_url:
+			self._discord_webhook_embed(self.webhook_url)
+
+		elif "slack" in self.webhook_url:
+			self._slack_webhook_(self.webhook_url)
+
+		else:
+			raise WebhookNotFound(self.webhook_url)
+
+
+	def _discord_webhook_embed(self, webhook_url):
+		""" push a certain embedd to the discord webhook """
+		print ("discoord")
+
+	def _slack_webhook_(self, webhook_url):
+		""" aner ikke hvordan slack og webhooks funker... """
+		return ("slack")
 
 	def _store_locally(self, _events):
 		""" store parsed events to a local json file """
 		with codecs.open('./json/parsed_events.json', 'w+', encoding='utf-8') as outfile:
 			json.dump(_events, outfile, indent=4, ensure_ascii=False)
-		pass
 
 	def discord_embed(self):
+
 		pass
 
 	def get_rss_entries(self):
 		""" ugly af, men som halvor skulle sagt det.. 'Funkææær'  """
 		for ctf in self.rss:
-			
 			event_id = ctf['link'].split('/')[-1] #str 
-
 			self.events[event_id] = {} # init dicts
 
 			title = ctf['title']	#str text
@@ -71,4 +89,15 @@ class ctfhookup:
 								"organizer_name": event_organizer_name,
 								"can_haz_vote": event_can_haz_vote}
 
-		self._store_locally(self.events)
+		return self._store_locally(self.events)
+
+## Errors
+
+class WebhookNotFound(Exception):
+	"""
+	WebhookNotFound: Error if webhook url is not recognized
+ 	"""
+	def __init__(self, webhook_url):
+		self.webhook_url = webhook_url
+		self.message = message=f"Url {self.webhook_url} is not a recognized webook url"
+		super().__init__(self.message)
