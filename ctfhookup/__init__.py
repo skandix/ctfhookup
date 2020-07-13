@@ -58,17 +58,17 @@ class ctfhookup:
 			event_can_haz_vote = (ctf['public_votable']) # bool
 			
 			self.events[event_id] = {"title": title,
-									"name": event_name,
-									"format": event_format,
-									"logo_url": event_logo_url,
-									"weight": event_weight,
-									"restricts": event_restricts,
-									"location": event_location,
-									"onsite": event_onsite,
-									"start_date": event_start_date,
-									"finish_date": event_finish_date,
-									"organizer_url": event_organizer_url,
-									"organizer_name": event_organizer_name,
-									"can_haz_vote": event_can_haz_vote}
+								"name": event_name,
+								"format": event_format,
+								"logo_url": event_logo_url,
+								"weight": event_weight,
+								"restricts": event_restricts,
+								"location": event_location,
+								"onsite": event_onsite,
+								"start_date": event_start_date,
+								"finish_date": event_finish_date,
+								"organizer_url": event_organizer_url,
+								"organizer_name": event_organizer_name,
+								"can_haz_vote": event_can_haz_vote}
 
 		self._store_locally(self.events)
