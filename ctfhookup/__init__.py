@@ -44,7 +44,11 @@ class ctfhookup:
 		self.get_rss_entries()
 		c = Calendar()
 		for _id, data in (self._load_json().items()):
-			print (data['duration'])
+			duration = (data['duration'])
+			if "day" in duration:
+				days = f"{duration.split(' ')[0]}"
+
+
 			"""
 			e = Event()
 			e.name = data['title']
