@@ -37,6 +37,10 @@ optional arguments:
   --days DAYS          how many days should it notice about ctf
 ```
 
+## ctftime.datapor.no
+You can import the calendar directly from https://ctftime.datapor.no.
+It looks like this in the Google Calendar.
+![](https://i.imgur.com/nlGuMW4.jpg)
 
 ## CONTRIBUTIONS
 Want to help out?
