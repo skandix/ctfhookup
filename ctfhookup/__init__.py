@@ -96,9 +96,13 @@ class ctfhookup:
 
 			if "day" in (event_duration):
 				event_days = int(event_duration.split(' ')[0])
+			else:
+				event_days = 0
 
 			if ":" in event_duration:
 				event_hours = int(event_duration.split(' ')[-1].split(':')[0])
+			else:
+				event_hours = 0
 
 			self.events[event_id] = {'title': title,
 			'name': event_name,
