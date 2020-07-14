@@ -1,4 +1,4 @@
-# ctfhookup🪝📅- (ctftime_upcomming_webhook)
+# ctfhookup - (ctftime_upcomming_webhook)
 > Not the CTF dating app you had hoped for.
 
 Script to Generate "Custom" ICS files and Notice about upcomming ctf Events through webhooks.
@@ -20,6 +20,10 @@ pip install -r requirements
 ```
 
 ## USAGE
+```bash
+cp example.env .env
+```
+
 ```bash
 usage: main.py [-h] [--calendar] [--location LOCATION] [--webhook] [--days DAYS]
 
