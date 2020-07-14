@@ -1,5 +1,6 @@
 # custom ignore file for this projects
 *.json
+*.ics
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
