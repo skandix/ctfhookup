@@ -9,6 +9,7 @@ verify_ssl = true
 feedparser = "*"
 ics = "*"
 arrow = "*"
+loguru = "*"
 
 [requires]
 python_version = "3.8"
