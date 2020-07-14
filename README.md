@@ -21,6 +21,10 @@ pip install -r requirements
 
 ## USAGE
 ```bash
+cp example.env .env
+```
+
+```bash
 usage: main.py [-h] [--calendar] [--location LOCATION] [--webhook] [--days DAYS]
 
 CTFtime Ical and Webhooks
