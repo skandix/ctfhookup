@@ -1,10 +1,10 @@
-# ctfhookup - (ctftime_upcomming_webhook)
+# ctfhookup🪝📅- (ctftime_upcomming_webhook)
+> Not the CTF dating app you had hoped for.
 
-script to push new upcomming events from ctftime to a discord webook.
+Script to Generate "Custom" ICS files and Notice about upcomming ctf Events through webhooks.
 
 ## WHY?
-Reasons being mostly lazy, and that I want to be able to filter it for only Jeporady events or only Attack and Defense events, and vice versa for only getting
-
+Reasons being mostly lazy.
 
 ## INSTALL
 ### pipenv
@@ -20,11 +20,22 @@ pip install -r requirements
 ```
 
 ## USAGE
-As this is not quite a finished project, you can only get the parsed events from the rss feed
 ```bash
-./main.py
+usage: main.py [-h] [--calendar] [--location LOCATION] [--webhook] [--days DAYS]
+
+CTFtime Ical and Webhooks
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --calendar           Generates ical file for all upcomming ctf evetns
+  --location LOCATION  where do you want calendar to apeear
+  --webhook            enables webhook mode, and will start pushing events that are upcomming.
+  --days DAYS          how many days should it notice about ctf
 ```
+
 
 ## CONTRIBUTIONS
 Want to help out?
+
 Poke me on discord - skandix#1269
+
