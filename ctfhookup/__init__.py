@@ -40,50 +40,26 @@ class ctfhookup:
 		""" aner ikke hvordan slack og webhooks funker... """
 		return ("slack")
 
-	def generate_calendar(self):
+	def generate_calendar(self, location):
 		self.get_rss_entries()
 		c = Calendar()
 		for _id, data in (self._load_json().items()):
-			duration = (data['duration'])
-			if "day" in duration:
-				days = f"{duration.split(' ')[0]}"
-
-
-			"""
+			cosmetic_spacer = "¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸"
 			e = Event()
 			e.name = data['title']
 			e.begin = data['start_date']
-			e.duration = data['duration']
-
-			e.description = f"CTF {data['name']} Organized by {data['organizer_name']} \n{data['organizer_url']}\nFormat: {data['format']}\nPoint Weigth: {data['weight']}\nRestrictions: {data['restricts']}\n"
+			e.duration = ({"days":data['days'], "hours":data['hours']})
+			e.description = f"{cosmetic_spacer}\nCTF {data['name']} Organized by {data['organizer_name']} \n{data['organizer_url']}\n\nFormat: {data['format']}\nPoint Weigth: {data['weight']}\nRestrictions: {data['restricts']}\nLocation: {data['location']}\nOnsite: {data['onsite']}\n{cosmetic_spacer}"
 			c.events.add(e)
-			print(c)
 
-			with open('./ical/ctftime_upcomming.ics', 'w') as f:
+			with open(location+"upcomming_ctfs.ics", 'w') as f:
 				f.writelines(c)
-			"""
 
 	def _diff_time(self, end_time:str, start_time:str):
 		diff  = str(arrow.get(end_time) - arrow.get(start_time))
 		return diff
-		#"if "days" in diff:
-		#	return (f"{(int(diff.split('days')[0])*24)}")
-		#elif "day" in diff:
-		#	return (f"24")
-		#else:
-		#	return (diff.split(':')[0])
 
 	def _convert_to_readable(self, timebomb:str, timezone:str='Europe/Oslo') -> str:
-		"""
-		_convert_to_readable convert from ctftime time format to a more readable timeformat and then convert it to a certain timezone
-
-		Args:
-			timebomb (str): [time to convert]
-			timezone (str, optional): [convert to a specific Timezone]. Defaults to 'Europe/Oslo'.
-
-		Returns:
-			str: [human readable norwegian time]
-		"""
 		human = (re.findall(r'\d{2}', timebomb)) # yay Regex <3
 		return arrow.get(f"{human[0]}{human[1]}-{human[2]}-{human[3]} {human[4]}:{human[5]}:{human[6]}").to(timezone).for_json()
 
@@ -118,6 +94,12 @@ class ctfhookup:
 			event_organizer_name = (ctf['organizers'].split('"')[5])
 			event_can_haz_vote = bool(ctf['public_votable'])
 
+			if "day" in (event_duration):
+				event_days = int(event_duration.split(' ')[0])
+
+			if ":" in event_duration:
+				event_hours = int(event_duration.split(' ')[-1].split(':')[0])
+
 			self.events[event_id] = {'title': title,
 			'name': event_name,
 			'format': event_format,
@@ -129,6 +111,8 @@ class ctfhookup:
 			'start_date': event_start_date,
 			'finish_date': event_finish_date,
 			'duration':event_duration,
+			'days':event_days,
+			'hours':event_hours,
 			'organizer_url': event_organizer_url,
 			'organizer_name': event_organizer_name,
 			'can_haz_vote': event_can_haz_vote}
