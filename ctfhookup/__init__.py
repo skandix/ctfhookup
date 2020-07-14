@@ -1,6 +1,4 @@
 import feedparser
-import datetime
-import codecs
 import arrow
 import json
 import sys
@@ -11,7 +9,6 @@ from loguru import logger as log
 from ics import Calendar, Event
 from dotenv import load_dotenv
 from pathlib import Path
-
 
 class ctfhookup:
 	log.add(sys.stdin, format="{time} {level} {message}", filter="my_module", level="INFO")
@@ -33,21 +30,56 @@ class ctfhookup:
 	def __repr__(self):
 		return f"{self.__class__.__name__}({self.webhook_url})"
 
-	def _diff_time(self, end_time:str, start_time:str):
+	def _time_machine(days:int, date:str) -> str:
+		pass
+
+	def _diff_time(self, end_time:str, start_time:str) -> str:
+		"""
+		Calculate the difference between two dates
+
+		Args:
+			end_time (str): [stop time]
+			start_time (str): [start time]
+
+		Returns:
+			[str]: [return the diff]
+		"""
 		return str(arrow.get(end_time) - arrow.get(start_time))
 
 	def _convert_to_readable(self, _input_time:str, timezone:str='Europe/Oslo') -> str:
+		"""
+		Using regex to convert timestamp to YYYY-MM-DD HH:MM:SS
+
+		Args:
+			_input_time (str): [description]
+			timezone (str, optional): [convert UTC time to any timezone]. Defaults to 'Europe/Oslo'.
+
+		Returns:
+			str: [norwegian time]
+		"""
 		tida = (re.findall(r'\d{2}', _input_time))
 		return arrow \
 		.get(f"{tida[0]}{tida[1]}-{tida[2]}-{tida[3]} {tida[4]}:{tida[5]}:{tida[6]}") \
 		.to(timezone).for_json()
 
 	def _load_json(self) -> dict:
+		"""
+		Load Json from ./json/parsed_events.json
+
+		Returns:
+			dict: [json dict]
+		"""
 		log.debug('Loading from Json')
 		with open('./json/parsed_events.json', 'r') as fp:
 			return (json.load(fp))
 
 	def _write_json(self, _data:dict):
+		"""
+		Write Parsed data to ./json/parsed_events.json
+
+		Args:
+			_data (dict): [json data to write]
+		"""
 		log.debug('Writing to Json')
 		with open('./json/parsed_events.json', 'w') as fp:
 			json.dump(_data, fp, indent=4)
@@ -68,7 +100,13 @@ class ctfhookup:
 	def push_upcomming(self, alert_time:int):
 		print (f"DEFAULT ALERT TIME: {alert_time}")
 
-	def generate_calendar(self, location):
+	def generate_calendar(self, location:str):
+		"""
+		Generates the calendar from parsed json data.
+
+		Args:
+			location ([str]): [Path where to store the calendar]
+		"""
 		self._get_rss_entries()
 		c = Calendar()
 		log.info('Generating Calendar')
@@ -96,8 +134,14 @@ class ctfhookup:
 				f.writelines(c)
 		log.info('Finished Generating CTF calendar')
 
-	def _get_rss_entries(self):
-		""" ugly af, men som halvor skulle sagt det.. 'Funkææær'  """
+	def _get_rss_entries(self) -> object:
+		"""
+		Gets all entries from the Ctftime feed.
+		And generates a json struct with event_id as keys.
+
+		Returns:
+			[object]: [json dict object]
+		"""
 		for ctf in self.rss:
 			title = str(ctf['title'])
 			event_id = int(ctf['link'].split('/')[-1])
