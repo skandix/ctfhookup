@@ -1,4 +1,4 @@
-# ctfhookup - (ctftime_upcomming_webhook)
+# ctfhookup
 > Not the CTF dating app you had hoped for.
 
 Script to Generate "Custom" ICS files and Notice about upcomming ctf Events through webhooks.
