@@ -5,6 +5,7 @@ import sys
 import os
 import re
 
+from discord_webhook import DiscordWebhook, DiscordEmbed
 from loguru import logger as log
 from ics import Calendar, Event
 from dotenv import load_dotenv
@@ -18,7 +19,9 @@ class ctfhookup:
 	def __init__(self):
 		self.env = os.environ
 		self.rss_url = self.env.get('CTFTIME_UPCOMMING_RSS')
-		self.webhook_url = self.env.get('DISCORD_WEBHOOK_URL')
+		self.discord_hook_url = self.env.get('DISCORD_WEBHOOK_URL')
+		self.slack_hook_url = self.env.get('SLACK_WEBHOOK_URL')
+		self.discord_hook = DiscordWebhook(self.discord_hook_url, username="CTFHookup")
 		self.rss = feedparser.parse(self.rss_url)['entries']
 		self.spacer = "¸,ø¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø,¸"
 		self.calendar_name = "ctftime_upcomming.ics"
@@ -85,20 +88,34 @@ class ctfhookup:
 			json.dump(_data, fp, indent=4)
 
 	def _webhook(self):
-		if "discord" in self.webhook_url:
-			self._discord_webhook_embed(self.webhook_url)
+		if "https://discordapp.com/api/webhooks/" in self.discord_hook_url:
+			self._discord_webhook_embed()
 
-		elif "slack" in self.webhook_url:
-			self._slack_webhook_(self.webhook_url)
+		elif "slack" in self.slack_hook_url:
+			self._slack_webhook_()
 
-	def _discord_webhook_embed(self, webhook_url):
-		return ("discoord")
+	def _discord_webhook_embed(self):
+		embed = DiscordEmbed(title="data['title']", description="CTF {data['name']} Organized by {data['organizer_name']}", color=424242)
+		embed.set_author(name='Author Name', url="http://data['organizer_url']/", icon_url='https://i.imgur.com/drtH5C0.jpg')
+		embed.set_footer(text='CTFHookup')
+		embed.set_timestamp()
+		embed.add_embed_field(name='Format', value='data["format"]')
+		#embed.add_embed_field(name='Point Weigth', value="data['weight']")
+		#embed.add_embed_field(name='Restrictions', value="data['restricts']")
+		#embed.add_embed_field(name='Location', value="data['location']")
+		#embed.add_embed_field(name='Onsite', value="data['onsite']")
+		#embed.add_embed_field(name='Voting', value="data['can_haz_vote']")
+		#embed.add_embed_field(name='Start', value="data['start_date']")
+		#embed.add_embed_field(name='Stop', value="data['finish_date']")
+
+		self.discord_hook.add_embed(embed)
+		response = self.discord_hook.execute()
 
 	def _slack_webhook_(self, webhook_url):
 		return ("slackern")
 
 	def push_upcomming(self, alert_time:int):
-		print (f"DEFAULT ALERT TIME: {alert_time}")
+		self._webhook()
 
 	def generate_calendar(self, location:str):
 		"""
